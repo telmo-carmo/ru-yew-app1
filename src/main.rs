@@ -48,8 +48,8 @@ python3 -m http.server
      let on_bt1 = {
         let counter = counter.clone();
         Callback::from(move |_| {
-            web_sys::console::log_1(&"Button clicked!".into());
             let value = *counter + 1;
+            web_sys::console::log_1(&format!("Button clicked {value}!").into());
             counter.set(value);
         })
      };
