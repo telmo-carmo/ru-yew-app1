@@ -18,7 +18,6 @@ python3 -m http.server
 
 */
 
-
 use yew::prelude::*;
 use yew_router::prelude::*;
 //use web_sys::HtmlInputElement;
@@ -51,19 +50,36 @@ fn switch_routes(routes: Route) -> Html {
         Route::Home => html! { <Home /> },
         Route::About => html! { <About /> },
         Route::NotFound => html! { <div>
-                    <h1>{"404 Not Found"}</h1>
-                    <Link<Route> to={Route::Home}>{ "Go to Home Page" }</Link<Route>>
-                </div> },
+            <h1>{"404 Not Found"}</h1>
+            <Link<Route> to={Route::Home}>{ "Go to Home Page" }</Link<Route>>
+        </div> },
     }
 }
 
 #[function_component(About)]
 fn about() -> Html {
     html! {
+      <div>
+        <NavBar />
         <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 2rem;">
             <h1>{"About Page"}</h1>
             <Link<Route> to={Route::Home}>{ "Go to Home Page" }</Link<Route>>
         </div>
+      </div>
+    }
+}
+
+#[function_component(NavBar)]
+fn navbar() -> Html {
+    html! {
+        <nav style="display: flex; justify-content: space-around; background-color: #f0f0f0; padding: 0.5rem;">
+            <Link<Route> to={Route::Home} classes="link-style">
+                {"Home"}
+            </Link<Route>>
+            <Link<Route> to={Route::About} classes="link-style">
+                {"About"}
+            </Link<Route>>
+        </nav>
     }
 }
 
@@ -85,15 +101,22 @@ fn home() -> Html {
 
     let on_bt1 = {
         let counter = counter.clone();
+        let navigator = use_navigator().unwrap();
         Callback::from(move |_| {
             let value = *counter + 1;
             web_sys::console::log_1(&format!("Button clicked {value}!").into());
-            counter.set(value);
+            if value == 5 {
+                navigator.push(&Route::About);
+            } else {
+                counter.set(value);
+            }
         })
     };
 
     html! {
         <div>
+          <NavBar />
+          <div>
             <h1>{ "Yew App 1 Main" }</h1>
             <input type="text" ref={name_input_ref} placeholder="Enter your name" onchange={update_name}/>
             <Greeting name={(*name).clone()} />
@@ -110,9 +133,9 @@ fn home() -> Html {
             <h2>{"Conditional Rendering Example"}</h2>
             {
                 if *name == "Yew" {
-                    html! { 
+                    html! {
                       <div>
-                        <p style="color: green;">{"Welcome, Yew!"}</p> 
+                        <p style="color: green;">{"Welcome, Yew!"}</p>
                         <Link<Route> to={Route::About}>{ "Go to About Page" }</Link<Route>>
                       </div>
                     }
@@ -124,6 +147,7 @@ fn home() -> Html {
             <h2>{"Handling Events"}</h2>
             <p>{ *counter }</p>
             <button onclick={on_bt1}>{"Click Me"}</button>
+          </div>
         </div>
     }
 }
@@ -136,6 +160,7 @@ fn app() -> Html {
         </BrowserRouter>
     }
 }
+
 
 fn main() {
     //wasm_logger::init(wasm_logger::Config::new(log::Level::Trace));
