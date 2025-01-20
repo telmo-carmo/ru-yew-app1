@@ -20,7 +20,6 @@ python3 -m http.server
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-
 #[derive(Properties, PartialEq)]
 pub struct Props {
     pub name: String,
@@ -70,14 +69,14 @@ fn form1() -> Html {
     };
 
     let onchange_sel1 = {
-        let sel1_ref = sel1_ref.clone(); 
+        let sel1_ref = sel1_ref.clone();
         Callback::from(move |_e: Event| {
             if let Some(sel1) = sel1_ref.cast::<web_sys::HtmlSelectElement>() {
                 let value = sel1.value();
                 let msg = format!("Selected value: {}", value);
                 let w = web_sys::window().expect("Failed to get JS window");
                 w.alert_with_message(&msg).expect("Failed to show alert");
-                web_sys::console::log_1(&msg.into()); 
+                web_sys::console::log_1(&msg.into());
             }
         })
     };
@@ -88,9 +87,9 @@ fn form1() -> Html {
         <div class="container">
             <h1 class="h1_title">{"Form1 Page"}</h1>
             <select ref={sel1_ref} onchange={onchange_sel1}>
-            <option value="">{"Please select"}</option>
-            <option value="option1">{"Option 1"}</option>
-            <option value="option2">{"Option 2"}</option>
+                <option value="">{"Please select"}</option>
+                <option value="option1">{"Option 1"}</option>
+                <option value="option2">{"Option 2"}</option>
             </select>
             <Link<Route> to={Route::Home}>{ "Go to Home Page" }</Link<Route>>
 
