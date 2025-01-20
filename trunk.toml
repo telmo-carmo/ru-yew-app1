@@ -1,5 +1,8 @@
 [build]
 dist = "dist"
 
-[[copy]]
+[copy]
 source = "main.css"
+
+[serve]
+port = 8080
