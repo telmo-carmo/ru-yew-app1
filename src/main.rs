@@ -10,9 +10,8 @@ cargo install trunk wasm-bindgen-cli
 trunk serve
 
 --
-
+OR:
 wasm-pack build --target web
-
 python3 -m http.server
 
 
@@ -40,6 +39,8 @@ enum Route {
     Home,
     #[at("/about")]
     About,
+    #[at("/form1")]
+    Form1,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -49,10 +50,32 @@ fn switch_routes(routes: Route) -> Html {
     match routes {
         Route::Home => html! { <Home /> },
         Route::About => html! { <About /> },
+        Route::Form1 => html! { <Form1 /> },
         Route::NotFound => html! { <div>
             <h1>{"404 Not Found"}</h1>
             <Link<Route> to={Route::Home}>{ "Go to Home Page" }</Link<Route>>
         </div> },
+    }
+}
+
+#[function_component(Form1)]
+fn form1() -> Html {
+    let on_bt1 = {
+        let navigator = use_navigator().unwrap();
+        Callback::from(move |_| {
+            navigator.push(&Route::About);
+        })
+    };
+
+    html! {
+      <div>
+        <NavBar />
+        <div class="container">
+            <h1 class="h1_title">{"Form1 Page"}</h1>
+            <Link<Route> to={Route::Home}>{ "Go to Home Page" }</Link<Route>>
+            <button onclick={on_bt1} class="mui-btn mui-btn--primary">{"Go About"}</button>
+        </div>
+      </div>
     }
 }
 
@@ -61,8 +84,8 @@ fn about() -> Html {
     html! {
       <div>
         <NavBar />
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 2rem;">
-            <h1>{"About Page"}</h1>
+        <div class="container">
+            <h1 class="h1_title">{"About Page"}</h1>
             <Link<Route> to={Route::Home}>{ "Go to Home Page" }</Link<Route>>
         </div>
       </div>
@@ -76,9 +99,8 @@ fn navbar() -> Html {
             <Link<Route> to={Route::Home} classes="link-style">
                 {"Home"}
             </Link<Route>>
-            <Link<Route> to={Route::About} classes="link-style">
-                {"About"}
-            </Link<Route>>
+            <Link<Route> to={Route::Form1} classes="link-style">{"Form1"}</Link<Route>>
+            <Link<Route> to={Route::About} classes="link-style">{"About"}</Link<Route>>
         </nav>
     }
 }
@@ -160,7 +182,6 @@ fn app() -> Html {
         </BrowserRouter>
     }
 }
-
 
 fn main() {
     //wasm_logger::init(wasm_logger::Config::new(log::Level::Trace));
