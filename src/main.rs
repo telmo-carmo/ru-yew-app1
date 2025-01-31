@@ -7,6 +7,7 @@ see: https://github.com/jetli/awesome-yew#component-libraries
 rustup target add wasm32-unknown-unknown
 cargo install trunk wasm-bindgen-cli
 
+trunk build --release
 trunk serve
 
 --
