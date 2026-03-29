@@ -3,7 +3,7 @@
 ```shell
 
 trunk build --release
-trunk serve
+trunk serve --release
 
 
 --
